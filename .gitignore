@@ -17,6 +17,6 @@ coverage/
 # Editors
 .vscode/
 
-# Secretos locales
+# Local secrets
 appsettings.Local.json
 .env
