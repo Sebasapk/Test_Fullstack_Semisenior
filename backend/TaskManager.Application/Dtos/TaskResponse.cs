@@ -12,5 +12,4 @@ public record TaskResponse(
     string UserName,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    JsonElement? AdditionalData,
-    string? AdditionalDataError);
+    JsonElement? AdditionalData);

@@ -57,12 +57,8 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
         return ToResponse(task);
     }
 
-    private static TaskResponse ToResponse(TaskItem task)
-    {
-        var (additionalData, error) = ParseAdditionalData(task.AdditionalData);
-
-        return new TaskResponse(
-            task.Id,
+    private static TaskResponse ToResponse(TaskItem task) =>
+        new(task.Id,
             task.Title,
             task.Description,
             task.Status,
@@ -70,23 +66,22 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             task.User.Name,
             task.CreatedAt,
             task.UpdatedAt,
-            additionalData,
-            error);
-    }
+            ParseAdditionalData(task.AdditionalData));
 
-    private static (JsonElement? Data, string? Error) ParseAdditionalData(string? json)
+    // The column holds free-form JSON, so a row that cannot be parsed must not break the whole task list.
+    private static JsonElement? ParseAdditionalData(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
-            return (null, null);
+            return null;
 
         try
         {
             using var document = JsonDocument.Parse(json);
-            return (document.RootElement.Clone(), null);
+            return document.RootElement.Clone();
         }
         catch (JsonException)
         {
-            return (null, "AdditionalData is not valid JSON and could not be read.");
+            return null;
         }
     }
 }
