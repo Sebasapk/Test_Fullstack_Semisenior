@@ -21,6 +21,10 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
         if (string.IsNullOrEmpty(title))
             throw new BusinessRuleException("Title is required.");
 
+        // Only JSON objects pass
+        if (request.AdditionalData is { ValueKind: not JsonValueKind.Object and not JsonValueKind.Null and not JsonValueKind.Undefined })
+            throw new BusinessRuleException("AdditionalData must be a JSON object.");
+
         var user = await users.GetByIdAsync(request.UserId)
             ?? throw new NotFoundException($"User {request.UserId} was not found.");
 
@@ -30,7 +34,7 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             Description = request.Description?.Trim(),
             UserId = user.Id,
             Status = TaskStatus.Pending,
-            AdditionalData = request.AdditionalData is { ValueKind: not JsonValueKind.Null and not JsonValueKind.Undefined }
+            AdditionalData = request.AdditionalData is { ValueKind: JsonValueKind.Object }
                 ? request.AdditionalData.Value.GetRawText()
                 : null
         };
@@ -68,7 +72,7 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             task.UpdatedAt,
             ParseAdditionalData(task.AdditionalData));
 
-    // The column holds free-form JSON, so a row that cannot be parsed must not break the whole task list.
+    // Turns the JSON text stored in the column back into an object; unreadable text returns null instead of breaking the list.
     private static JsonElement? ParseAdditionalData(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
