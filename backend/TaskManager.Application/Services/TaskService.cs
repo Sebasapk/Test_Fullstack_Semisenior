@@ -9,9 +9,9 @@ namespace TaskManager.Application.Services;
 
 public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskService
 {
-    public async Task<List<TaskResponse>> GetAllAsync(TaskStatus? status, int? userId)
+    public async Task<List<TaskResponse>> GetAllAsync(TaskStatus? status, int? userId, string? priority)
     {
-        var all = await tasks.GetAllAsync(status, userId);
+        var all = await tasks.GetAllAsync(status, userId, priority?.Trim());
         return all.Select(ToResponse).ToList();
     }
 

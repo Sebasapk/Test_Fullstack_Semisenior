@@ -10,8 +10,9 @@ namespace TaskManager.Api.Controllers;
 public class TasksController(ITaskService tasks) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<TaskResponse>>> GetAll([FromQuery] TaskStatus? status, [FromQuery] int? userId) =>
-        Ok(await tasks.GetAllAsync(status, userId));
+    public async Task<ActionResult<List<TaskResponse>>> GetAll(
+        [FromQuery] TaskStatus? status, [FromQuery] int? userId, [FromQuery] string? priority) =>
+        Ok(await tasks.GetAllAsync(status, userId, priority));
 
     [HttpPost]
     public async Task<ActionResult<TaskResponse>> Create(CreateTaskRequest request)

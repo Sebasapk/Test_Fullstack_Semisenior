@@ -8,7 +8,7 @@ namespace TaskManager.Infrastructure.Repositories;
 
 public class TaskRepository(AppDbContext db) : ITaskRepository
 {
-    public Task<List<TaskItem>> GetAllAsync(TaskStatus? status, int? userId)
+    public Task<List<TaskItem>> GetAllAsync(TaskStatus? status, int? userId, string? priority)
     {
         var query = db.Tasks.AsNoTracking().Include(t => t.User).AsQueryable();
 
@@ -17,6 +17,9 @@ public class TaskRepository(AppDbContext db) : ITaskRepository
 
         if (userId.HasValue)
             query = query.Where(t => t.UserId == userId.Value);
+
+        if (!string.IsNullOrEmpty(priority))
+            query = query.Where(t => AppDbContext.JsonValue(t.AdditionalData, "$.priority") == priority);
 
         return query.OrderByDescending(t => t.CreatedAt).ToListAsync();
     }

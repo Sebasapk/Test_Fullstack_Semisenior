@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskManager.Domain.Entities;
 
 namespace TaskManager.Infrastructure.Persistence;
@@ -8,8 +8,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users => Set<User>();
     public DbSet<TaskItem> Tasks => Set<TaskItem>();
 
+    // Lets LINQ queries call SQL Server's JSON_VALUE; it only translates to SQL and is never executed in C#.
+    public static string? JsonValue(string? expression, string path) =>
+        throw new NotSupportedException("JsonValue can only be used inside a LINQ query.");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDbFunction(() => JsonValue(default, default!)).HasName("JSON_VALUE").IsBuiltIn();
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.ToTable("Users");

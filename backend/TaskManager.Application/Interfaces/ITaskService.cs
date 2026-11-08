@@ -5,7 +5,7 @@ namespace TaskManager.Application.Interfaces;
 
 public interface ITaskService
 {
-    Task<List<TaskResponse>> GetAllAsync(TaskStatus? status, int? userId);
+    Task<List<TaskResponse>> GetAllAsync(TaskStatus? status, int? userId, string? priority);
     Task<TaskResponse> CreateAsync(CreateTaskRequest request);
     Task<TaskResponse> UpdateStatusAsync(int id, UpdateTaskStatusRequest request);
 }
