@@ -1,3 +1,4 @@
+using System.Text.Json;
 using TaskStatus = TaskManager.Domain.Entities.TaskStatus;
 
 namespace TaskManager.Application.Dtos;
@@ -11,4 +12,5 @@ public record TaskResponse(
     string UserName,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    TaskAdditionalDataDto? AdditionalData);
+    JsonElement? AdditionalData,
+    string? AdditionalDataError);

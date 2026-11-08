@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace TaskManager.Application.Dtos;
 
@@ -13,5 +14,5 @@ public class CreateTaskRequest
     [Range(1, int.MaxValue)]
     public int UserId { get; set; }
 
-    public TaskAdditionalDataDto? AdditionalData { get; set; }
+    public JsonElement? AdditionalData { get; set; }
 }

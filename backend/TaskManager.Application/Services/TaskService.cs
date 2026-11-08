@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using TaskManager.Application.Dtos;
 using TaskManager.Application.Exceptions;
 using TaskManager.Application.Interfaces;
@@ -31,9 +30,9 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             Description = request.Description?.Trim(),
             UserId = user.Id,
             Status = TaskStatus.Pending,
-            AdditionalData = request.AdditionalData is null
-                ? null
-                : JsonSerializer.Serialize(request.AdditionalData, JsonOptions)
+            AdditionalData = request.AdditionalData is { ValueKind: not JsonValueKind.Null and not JsonValueKind.Undefined }
+                ? request.AdditionalData.Value.GetRawText()
+                : null
         };
         await tasks.AddAsync(task);
 
@@ -58,14 +57,12 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
         return ToResponse(task);
     }
 
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    private static TaskResponse ToResponse(TaskItem task)
     {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
+        var (additionalData, error) = ParseAdditionalData(task.AdditionalData);
 
-
-    private static TaskResponse ToResponse(TaskItem task) =>
-        new(task.Id,
+        return new TaskResponse(
+            task.Id,
             task.Title,
             task.Description,
             task.Status,
@@ -73,7 +70,23 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             task.User.Name,
             task.CreatedAt,
             task.UpdatedAt,
-            task.AdditionalData is null
-                ? null
-                : JsonSerializer.Deserialize<TaskAdditionalDataDto>(task.AdditionalData, JsonOptions));
+            additionalData,
+            error);
+    }
+
+    private static (JsonElement? Data, string? Error) ParseAdditionalData(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return (null, null);
+
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            return (document.RootElement.Clone(), null);
+        }
+        catch (JsonException)
+        {
+            return (null, "AdditionalData is not valid JSON and could not be read.");
+        }
+    }
 }
