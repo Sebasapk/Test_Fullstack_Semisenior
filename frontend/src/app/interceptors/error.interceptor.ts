@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
 
 import { ErrorMessageService } from '../services/error-message.service';
 
@@ -33,7 +33,8 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
       errorMessages.show(toMessage(error));
-      return throwError(() => error);
+      // The banner is the only place errors are handled, so rethrowing would just log an unhandled error in the console.
+      return EMPTY;
     })
   );
 };
