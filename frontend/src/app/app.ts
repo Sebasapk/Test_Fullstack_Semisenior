@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-
-import { TaskFormComponent } from './components/task-form/task-form.component';
-import { TaskListComponent } from './components/task-list/task-list.component';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [TaskFormComponent, TaskListComponent, UserListComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

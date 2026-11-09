@@ -1,5 +1,8 @@
+<nav>
+  <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+  <a routerLink="/users" routerLinkActive="active">Users</a>
+</nav>
+
 <main>
-  <app-task-form (created)="taskList.reload()" />
-  <app-task-list #taskList />
-  <app-user-list />
+  <router-outlet />
 </main>
