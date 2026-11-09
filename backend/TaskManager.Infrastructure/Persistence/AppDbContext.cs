@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.Domain.Entities;
 
 namespace TaskManager.Infrastructure.Persistence;
@@ -11,6 +12,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     // Lets LINQ queries call SQL Server's JSON_VALUE; it only translates to SQL and is never executed in C#.
     public static string? JsonValue(string? expression, string path) =>
         throw new NotSupportedException("JsonValue can only be used inside a LINQ query.");
+
+    // The database stores UTC but EF returns dates of unspecified kind, which the API would serialize without a "Z"
+    // and browsers would then read as local time.
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+    {
+        builder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,3 +47,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
     }
 }
+
+public class UtcDateTimeConverter()
+    : ValueConverter<DateTime, DateTime>(
+        v => v,
+        v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
