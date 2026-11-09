@@ -10,3 +10,7 @@ td {
   border-bottom: 1px solid #ddd;
   text-align: left;
 }
+
+button {
+  margin-right: 0.25rem;
+}

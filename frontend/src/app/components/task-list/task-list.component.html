@@ -18,6 +18,7 @@
       <th>Status</th>
       <th>Priority</th>
       <th>Created</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -28,6 +29,13 @@
         <td>{{ task.status }}</td>
         <td>{{ task.additionalData?.priority ?? '-' }}</td>
         <td>{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <td>
+          @for (status of availableStatuses(task); track status) {
+            <button type="button" (click)="changeStatus(task, status)">
+              {{ actionLabels[status] }}
+            </button>
+          }
+        </td>
       </tr>
     }
   </tbody>

@@ -15,6 +15,11 @@ export class TaskListComponent implements OnInit {
   private readonly tasksService = inject(TasksService);
 
   protected readonly statuses = Object.values(TaskStatus);
+  protected readonly actionLabels: Record<TaskStatus, string> = {
+    [TaskStatus.Pending]: 'Mark as pending',
+    [TaskStatus.InProgress]: 'Mark as in progress',
+    [TaskStatus.Done]: 'Mark as done'
+  };
   protected readonly tasks = signal<Task[]>([]);
   private selectedStatus: TaskStatus | undefined;
 
@@ -25,6 +30,18 @@ export class TaskListComponent implements OnInit {
   protected onStatusFilterChange(value: string): void {
     this.selectedStatus = value ? (value as TaskStatus) : undefined;
     this.loadTasks();
+  }
+
+  protected availableStatuses(task: Task): TaskStatus[] {
+    return this.statuses.filter(
+      (status) =>
+        status !== task.status &&
+        !(task.status === TaskStatus.Pending && status === TaskStatus.Done)
+    );
+  }
+
+  protected changeStatus(task: Task, status: TaskStatus): void {
+    this.tasksService.updateStatus(task.id, status).subscribe(() => this.loadTasks());
   }
 
   private loadTasks(): void {
