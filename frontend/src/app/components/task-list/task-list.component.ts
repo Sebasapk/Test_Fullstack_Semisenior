@@ -24,12 +24,12 @@ export class TaskListComponent implements OnInit {
   private selectedStatus: TaskStatus | undefined;
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.reload();
   }
 
   protected onStatusFilterChange(value: string): void {
     this.selectedStatus = value ? (value as TaskStatus) : undefined;
-    this.loadTasks();
+    this.reload();
   }
 
   protected availableStatuses(task: Task): TaskStatus[] {
@@ -41,10 +41,10 @@ export class TaskListComponent implements OnInit {
   }
 
   protected changeStatus(task: Task, status: TaskStatus): void {
-    this.tasksService.updateStatus(task.id, status).subscribe(() => this.loadTasks());
+    this.tasksService.updateStatus(task.id, status).subscribe(() => this.reload());
   }
 
-  private loadTasks(): void {
+  reload(): void {
     this.tasksService
       .getAll({ status: this.selectedStatus })
       .subscribe((tasks) => this.tasks.set(tasks));

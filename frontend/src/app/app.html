@@ -1,3 +1,4 @@
 <main>
-  <app-task-list />
+  <app-task-form (created)="taskList.reload()" />
+  <app-task-list #taskList />
 </main>
