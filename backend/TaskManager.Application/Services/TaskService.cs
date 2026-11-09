@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using TaskManager.Application.Dtos;
 using TaskManager.Application.Exceptions;
 using TaskManager.Application.Interfaces;
@@ -7,7 +8,7 @@ using TaskStatus = TaskManager.Domain.Entities.TaskStatus;
 
 namespace TaskManager.Application.Services;
 
-public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskService
+public class TaskService(ITaskRepository tasks, IUserRepository users, ILogger<TaskService> logger) : ITaskService
 {
     public async Task<List<TaskResponse>> GetAllAsync(TaskStatus? status, int? userId, string? priority)
     {
@@ -61,7 +62,7 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
         return ToResponse(task);
     }
 
-    private static TaskResponse ToResponse(TaskItem task) =>
+    private TaskResponse ToResponse(TaskItem task) =>
         new(task.Id,
             task.Title,
             task.Description,
@@ -70,21 +71,21 @@ public class TaskService(ITaskRepository tasks, IUserRepository users) : ITaskSe
             task.User.Name,
             task.CreatedAt,
             task.UpdatedAt,
-            ParseAdditionalData(task.AdditionalData));
+            ParseAdditionalData(task));
 
-    // Turns the JSON text stored in the column back into an object; unreadable text returns null instead of breaking the list.
-    private static JsonElement? ParseAdditionalData(string? json)
+    private JsonElement? ParseAdditionalData(TaskItem task)
     {
-        if (string.IsNullOrWhiteSpace(json))
+        if (string.IsNullOrWhiteSpace(task.AdditionalData))
             return null;
 
         try
         {
-            using var document = JsonDocument.Parse(json);
+            using var document = JsonDocument.Parse(task.AdditionalData);
             return document.RootElement.Clone();
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
+            logger.LogWarning(ex, "Task {TaskId} has AdditionalData that is not valid JSON.", task.Id);
             return null;
         }
     }

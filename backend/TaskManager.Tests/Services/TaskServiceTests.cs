@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging.Abstractions;
 using TaskManager.Application.Dtos;
 using TaskManager.Application.Exceptions;
 using TaskManager.Application.Services;
@@ -17,7 +18,7 @@ public class TaskServiceTests
     public TaskServiceTests()
     {
         _users.Items.Add(new User { Id = 1, Name = "Ana", Email = "ana@test.com" });
-        _service = new TaskService(_tasks, _users);
+        _service = new TaskService(_tasks, _users, NullLogger<TaskService>.Instance);
     }
 
     private static JsonElement Json(string raw) => JsonDocument.Parse(raw).RootElement.Clone();
