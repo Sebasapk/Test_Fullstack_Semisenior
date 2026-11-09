@@ -42,6 +42,12 @@ export class TaskListComponent implements OnInit {
     );
   }
 
+  // AdditionalData is free-form JSON, so the API does not guarantee that tags is an array.
+  protected tagsOf(task: Task): string[] {
+    const tags = task.additionalData?.tags;
+    return Array.isArray(tags) ? tags : [];
+  }
+
   protected changeStatus(task: Task, status: TaskStatus): void {
     this.tasksService.updateStatus(task.id, status).subscribe(() => this.reload());
   }

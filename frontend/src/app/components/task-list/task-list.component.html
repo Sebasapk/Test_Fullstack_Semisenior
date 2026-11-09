@@ -23,9 +23,11 @@
         <thead>
           <tr>
             <th>Title</th>
+            <th>Description</th>
             <th>User</th>
             <th>Status</th>
             <th>Priority</th>
+            <th>Tags</th>
             <th>Created</th>
             <th>Actions</th>
           </tr>
@@ -34,6 +36,9 @@
           @for (task of tasks(); track task.id) {
             <tr>
               <td class="title">{{ task.title }}</td>
+              <td>
+                <div class="description">{{ task.description || '-' }}</div>
+              </td>
               <td>{{ task.userName }}</td>
               <td>
                 <span [class]="'badge status-' + task.status.toLowerCase()">{{ task.status }}</span>
@@ -44,6 +49,15 @@
                 } @else {
                   -
                 }
+              </td>
+              <td>
+                <div class="tags">
+                  @for (tag of tagsOf(task); track $index) {
+                    <span class="badge">{{ tag }}</span>
+                  } @empty {
+                    -
+                  }
+                </div>
               </td>
               <td class="date">{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
               <td>

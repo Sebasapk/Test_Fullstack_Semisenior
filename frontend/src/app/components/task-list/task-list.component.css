@@ -21,6 +21,23 @@
   font-weight: 500;
 }
 
+.description {
+  width: 18rem;
+  max-height: 6rem;
+  overflow: auto;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  width: 12rem;
+  max-height: 6rem;
+  overflow: auto;
+}
+
 .badge {
   display: inline-block;
   padding: 0.125rem 0.625rem;
@@ -50,6 +67,18 @@
 .priority-high {
   background: #fee2e2;
   color: #991b1b;
+}
+
+/* The table scrollbar can sit below the fold on long lists, so actions stay visible without it. */
+th:last-child,
+td:last-child {
+  position: sticky;
+  right: 0;
+  background: var(--color-surface);
+}
+
+tbody tr:hover td:last-child {
+  background: var(--color-background);
 }
 
 .row-actions {
