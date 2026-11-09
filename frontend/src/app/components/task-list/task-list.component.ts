@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 
 import { Task } from '../../models/task';
 import { TaskStatus } from '../../models/task-status';
@@ -21,6 +22,7 @@ export class TaskListComponent implements OnInit {
     [TaskStatus.Done]: 'Mark as done'
   };
   protected readonly tasks = signal<Task[]>([]);
+  protected readonly loading = signal(false);
   private selectedStatus: TaskStatus | undefined;
 
   ngOnInit(): void {
@@ -45,8 +47,10 @@ export class TaskListComponent implements OnInit {
   }
 
   reload(): void {
+    this.loading.set(true);
     this.tasksService
       .getAll({ status: this.selectedStatus })
+      .pipe(finalize(() => this.loading.set(false)))
       .subscribe((tasks) => this.tasks.set(tasks));
   }
 }

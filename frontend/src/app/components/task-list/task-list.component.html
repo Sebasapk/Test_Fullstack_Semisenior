@@ -10,33 +10,39 @@
   </select>
 </label>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>User</th>
-      <th>Status</th>
-      <th>Priority</th>
-      <th>Created</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (task of tasks(); track task.id) {
+@if (loading()) {
+  <p>Loading...</p>
+} @else if (tasks().length === 0) {
+  <p>No tasks found</p>
+} @else {
+  <table>
+    <thead>
       <tr>
-        <td>{{ task.title }}</td>
-        <td>{{ task.userName }}</td>
-        <td>{{ task.status }}</td>
-        <td>{{ task.additionalData?.priority ?? '-' }}</td>
-        <td>{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
-        <td>
-          @for (status of availableStatuses(task); track status) {
-            <button type="button" (click)="changeStatus(task, status)">
-              {{ actionLabels[status] }}
-            </button>
-          }
-        </td>
+        <th>Title</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Created</th>
+        <th>Actions</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (task of tasks(); track task.id) {
+        <tr>
+          <td>{{ task.title }}</td>
+          <td>{{ task.userName }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.additionalData?.priority ?? '-' }}</td>
+          <td>{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>
+            @for (status of availableStatuses(task); track status) {
+              <button type="button" (click)="changeStatus(task, status)">
+                {{ actionLabels[status] }}
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
