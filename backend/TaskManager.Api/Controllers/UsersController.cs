@@ -9,10 +9,14 @@ namespace TaskManager.Api.Controllers;
 public class UsersController(IUserService users) : ControllerBase
 {
     [HttpGet]
+    [ProducesResponseType<List<UserResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<UserResponse>>> GetAll() =>
         Ok(await users.GetAllAsync());
 
     [HttpPost]
+    [ProducesResponseType<UserResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<UserResponse>> Create(CreateUserRequest request)
     {
         var created = await users.CreateAsync(request);
