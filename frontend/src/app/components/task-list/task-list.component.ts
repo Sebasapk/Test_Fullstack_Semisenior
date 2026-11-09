@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { finalize } from 'rxjs';
 
 import { Task } from '../../models/task';
@@ -10,7 +10,8 @@ import { TasksService } from '../../services/tasks.service';
   selector: 'app-task-list',
   imports: [DatePipe],
   templateUrl: './task-list.component.html',
-  styleUrl: './task-list.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './task-list.component.css',
 })
 export class TaskListComponent implements OnInit {
   private readonly tasksService = inject(TasksService);
@@ -19,7 +20,7 @@ export class TaskListComponent implements OnInit {
   protected readonly actionLabels: Record<TaskStatus, string> = {
     [TaskStatus.Pending]: 'Mark as pending',
     [TaskStatus.InProgress]: 'Mark as in progress',
-    [TaskStatus.Done]: 'Mark as done'
+    [TaskStatus.Done]: 'Mark as done',
   };
   protected readonly tasks = signal<Task[]>([]);
   protected readonly loading = signal(false);
@@ -38,7 +39,7 @@ export class TaskListComponent implements OnInit {
     return this.statuses.filter(
       (status) =>
         status !== task.status &&
-        !(task.status === TaskStatus.Pending && status === TaskStatus.Done)
+        !(task.status === TaskStatus.Pending && status === TaskStatus.Done),
     );
   }
 

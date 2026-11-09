@@ -1,11 +1,11 @@
-import { Component, OnInit, inject, output, signal } from '@angular/core';
+import { Component, OnInit, inject, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormControl,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 
 import { CreateTaskRequest } from '../../models/create-task-request';
@@ -18,7 +18,10 @@ const MAX_TAGS = 10;
 const MAX_TAG_LENGTH = 30;
 
 function parseTags(value: string): string[] {
-  return value.split(',').map((tag) => tag.trim()).filter(Boolean);
+  return value
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 }
 
 function tagsValidator(control: AbstractControl<string>): ValidationErrors | null {
@@ -35,7 +38,8 @@ function tagsValidator(control: AbstractControl<string>): ValidationErrors | nul
 @Component({
   selector: 'app-task-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './task-form.component.html'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  templateUrl: './task-form.component.html',
 })
 export class TaskFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -55,7 +59,7 @@ export class TaskFormComponent implements OnInit {
     userId: new FormControl<number | null>(null, Validators.required),
     priority: this.fb.nonNullable.control(''),
     estimatedEndDate: this.fb.nonNullable.control(''),
-    tags: this.fb.nonNullable.control('', tagsValidator)
+    tags: this.fb.nonNullable.control('', tagsValidator),
   });
 
   ngOnInit(): void {
@@ -75,7 +79,8 @@ export class TaskFormComponent implements OnInit {
   }
 
   private buildRequest(): CreateTaskRequest {
-    const { title, description, userId, priority, estimatedEndDate, tags } = this.form.getRawValue();
+    const { title, description, userId, priority, estimatedEndDate, tags } =
+      this.form.getRawValue();
 
     const additionalData: TaskAdditionalData = {};
     if (priority) {
@@ -93,7 +98,7 @@ export class TaskFormComponent implements OnInit {
       title,
       description: description || undefined,
       userId: userId!,
-      additionalData: Object.keys(additionalData).length > 0 ? additionalData : undefined
+      additionalData: Object.keys(additionalData).length > 0 ? additionalData : undefined,
     };
   }
 }

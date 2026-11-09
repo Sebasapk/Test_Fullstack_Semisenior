@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -15,7 +15,8 @@ import { UsersService } from '../../services/users.service';
 @Component({
   selector: 'app-user-list',
   imports: [DatePipe, ReactiveFormsModule],
-  templateUrl: './user-list.component.html'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -34,7 +35,10 @@ export class UserListComponent implements OnInit {
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
-    email: ['', [Validators.required, Validators.email, Validators.maxLength(150), this.uniqueEmail]]
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(150), this.uniqueEmail],
+    ],
   });
 
   ngOnInit(): void {

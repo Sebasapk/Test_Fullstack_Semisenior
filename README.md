@@ -5,12 +5,12 @@ Internal task management system: create users, assign tasks to them and track th
 ## Tech stack
 
 - **Backend:** .NET 10 (SDK 10.0.401), ASP.NET Core Web API, Entity Framework Core 10, Swagger UI, xUnit
-- **Frontend:** Angular 21, TypeScript 5.9
+- **Frontend:** Angular 22, TypeScript 6.0
 - **Database:** SQL Server 2016 or later (tested with 2025 Express and LocalDB)
 
 ## Getting started
 
-You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), [Node.js](https://nodejs.org/) `^20.19`, `^22.12` or `>=24`, SQL Server, and `sqlcmd` or SQL Server Management Studio. Run the commands in PowerShell from the repository root.
+You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), [Node.js](https://nodejs.org/) `^22.22.3`, `^24.15` or `>=26`, SQL Server, and `sqlcmd` or SQL Server Management Studio. Run the commands in PowerShell from the repository root.
 
 ### 1. Database
 
@@ -47,6 +47,8 @@ cd frontend
 npm ci
 npm start
 ```
+
+If PowerShell blocks `npm` or `npx` with an execution policy error, use `npm.cmd` or `npx.cmd`.
 
 Open `http://localhost:4200`.
 
