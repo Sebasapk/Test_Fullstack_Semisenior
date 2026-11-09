@@ -35,8 +35,7 @@ function tagsValidator(control: AbstractControl<string>): ValidationErrors | nul
 @Component({
   selector: 'app-task-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './task-form.component.html',
-  styleUrl: './task-form.component.css'
+  templateUrl: './task-form.component.html'
 })
 export class TaskFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

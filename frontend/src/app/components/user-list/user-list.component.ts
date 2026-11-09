@@ -15,8 +15,7 @@ import { UsersService } from '../../services/users.service';
 @Component({
   selector: 'app-user-list',
   imports: [DatePipe, ReactiveFormsModule],
-  templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  templateUrl: './user-list.component.html'
 })
 export class UserListComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
