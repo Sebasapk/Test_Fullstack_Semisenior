@@ -26,6 +26,8 @@
           Enter a valid email address.
         } @else if (errors['maxlength']) {
           Email cannot exceed 150 characters.
+        } @else if (errors['duplicateEmail']) {
+          A user with this email already exists.
         }
       </small>
     }

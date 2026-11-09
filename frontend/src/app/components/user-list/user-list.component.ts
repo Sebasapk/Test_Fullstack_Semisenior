@@ -1,6 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 
 import { User } from '../../models/user';
 import { UsersService } from '../../services/users.service';
@@ -17,9 +23,17 @@ export class UserListComponent implements OnInit {
 
   protected readonly users = signal<User[]>([]);
 
+  // Only checks the users already loaded; the API still has the final say on uniqueness.
+  private readonly uniqueEmail = (control: AbstractControl<string>): ValidationErrors | null => {
+    const email = control.value.trim().toLowerCase();
+    return this.users().some((user) => user.email.toLowerCase() === email)
+      ? { duplicateEmail: true }
+      : null;
+  };
+
   protected readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
-    email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]]
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(150), this.uniqueEmail]]
   });
 
   ngOnInit(): void {
