@@ -7,6 +7,7 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
+import { finalize } from 'rxjs';
 
 import { User } from '../../models/user';
 import { UsersService } from '../../services/users.service';
@@ -22,6 +23,7 @@ export class UserListComponent implements OnInit {
   private readonly usersService = inject(UsersService);
 
   protected readonly users = signal<User[]>([]);
+  protected readonly loading = signal(false);
 
   // Only checks the users already loaded; the API still has the final say on uniqueness.
   private readonly uniqueEmail = (control: AbstractControl<string>): ValidationErrors | null => {
@@ -53,6 +55,10 @@ export class UserListComponent implements OnInit {
   }
 
   private loadUsers(): void {
-    this.usersService.getAll().subscribe((users) => this.users.set(users));
+    this.loading.set(true);
+    this.usersService
+      .getAll()
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe((users) => this.users.set(users));
   }
 }

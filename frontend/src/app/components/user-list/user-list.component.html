@@ -36,21 +36,27 @@
   <button type="submit">Create user</button>
 </form>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Created</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (user of users(); track user.id) {
+@if (loading()) {
+  <p>Loading...</p>
+} @else if (users().length === 0) {
+  <p>No users found</p>
+} @else {
+  <table>
+    <thead>
       <tr>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Created</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
