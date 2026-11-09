@@ -7,8 +7,10 @@ import { TaskListComponent } from '../components/task-list/task-list.component';
   selector: 'app-tasks-page',
   imports: [TaskFormComponent, TaskListComponent],
   template: `
-    <app-task-form (created)="taskList.reload()" />
-    <app-task-list #taskList />
+    <div class="page-layout">
+      <app-task-form (created)="taskList.reload()" />
+      <app-task-list #taskList />
+    </div>
   `
 })
 export class TasksPageComponent {}

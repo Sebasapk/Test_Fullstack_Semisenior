@@ -1,48 +1,64 @@
-<h2>Tasks</h2>
+<section class="card">
+  <div class="list-header">
+    <h2>Tasks</h2>
 
-<label>
-  Status
-  <select (change)="onStatusFilterChange($any($event.target).value)">
-    <option value="">All</option>
-    @for (status of statuses; track status) {
-      <option [value]="status">{{ status }}</option>
-    }
-  </select>
-</label>
+    <label class="filter">
+      Status
+      <select (change)="onStatusFilterChange($any($event.target).value)">
+        <option value="">All</option>
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
+  </div>
 
-@if (loading()) {
-  <p>Loading...</p>
-} @else if (tasks().length === 0) {
-  <p>No tasks found</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>User</th>
-        <th>Status</th>
-        <th>Priority</th>
-        <th>Created</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (task of tasks(); track task.id) {
-        <tr>
-          <td>{{ task.title }}</td>
-          <td>{{ task.userName }}</td>
-          <td>{{ task.status }}</td>
-          <td>{{ task.additionalData?.priority ?? '-' }}</td>
-          <td>{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
-          <td>
-            @for (status of availableStatuses(task); track status) {
-              <button type="button" (click)="changeStatus(task, status)">
-                {{ actionLabels[status] }}
-              </button>
-            }
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
-}
+  @if (loading()) {
+    <p class="empty-state">Loading...</p>
+  } @else if (tasks().length === 0) {
+    <p class="empty-state">No tasks found</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>User</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (task of tasks(); track task.id) {
+            <tr>
+              <td class="title">{{ task.title }}</td>
+              <td>{{ task.userName }}</td>
+              <td>
+                <span [class]="'badge status-' + task.status.toLowerCase()">{{ task.status }}</span>
+              </td>
+              <td>
+                @if (task.additionalData?.priority; as priority) {
+                  <span class="badge" [class.priority-high]="priority === 'High'">{{ priority }}</span>
+                } @else {
+                  -
+                }
+              </td>
+              <td class="date">{{ task.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+              <td>
+                <div class="row-actions">
+                  @for (status of availableStatuses(task); track status) {
+                    <button type="button" (click)="changeStatus(task, status)">
+                      {{ actionLabels[status] }}
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

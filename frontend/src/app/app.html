@@ -1,15 +1,22 @@
-<nav>
-  <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
-  <a routerLink="/users" routerLinkActive="active">Users</a>
-</nav>
-
-@if (errorMessages.message(); as message) {
-  <div class="error-banner" role="alert">
-    <span>{{ message }}</span>
-    <button type="button" (click)="errorMessages.clear()">Dismiss</button>
+<header class="app-header">
+  <div class="container">
+    <span class="brand">Task Manager</span>
+    <nav>
+      <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+      <a routerLink="/users" routerLinkActive="active">Users</a>
+    </nav>
   </div>
-}
+</header>
 
-<main>
-  <router-outlet />
-</main>
+<div class="container">
+  @if (errorMessages.message(); as message) {
+    <div class="error-banner" role="alert">
+      <span>{{ message }}</span>
+      <button type="button" (click)="errorMessages.clear()">Dismiss</button>
+    </div>
+  }
+
+  <main>
+    <router-outlet />
+  </main>
+</div>

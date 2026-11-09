@@ -1,62 +1,72 @@
-<h2>Users</h2>
+<div class="page-layout">
+  <section class="card">
+    <h2>New user</h2>
 
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="field">
-    <label for="name">Name</label>
-    <input id="name" type="text" formControlName="name" />
-    @if (form.controls.name.touched && form.controls.name.errors; as errors) {
-      <small class="error">
-        @if (errors['required']) {
-          Name is required.
-        } @else if (errors['maxlength']) {
-          Name cannot exceed 100 characters.
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" />
+        @if (form.controls.name.touched && form.controls.name.errors; as errors) {
+          <small class="error">
+            @if (errors['required']) {
+              Name is required.
+            } @else if (errors['maxlength']) {
+              Name cannot exceed 100 characters.
+            }
+          </small>
         }
-      </small>
-    }
-  </div>
+      </div>
 
-  <div class="field">
-    <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" />
-    @if (form.controls.email.touched && form.controls.email.errors; as errors) {
-      <small class="error">
-        @if (errors['required']) {
-          Email is required.
-        } @else if (errors['email']) {
-          Enter a valid email address.
-        } @else if (errors['maxlength']) {
-          Email cannot exceed 150 characters.
-        } @else if (errors['duplicateEmail']) {
-          A user with this email already exists.
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.errors; as errors) {
+          <small class="error">
+            @if (errors['required']) {
+              Email is required.
+            } @else if (errors['email']) {
+              Enter a valid email address.
+            } @else if (errors['maxlength']) {
+              Email cannot exceed 150 characters.
+            } @else if (errors['duplicateEmail']) {
+              A user with this email already exists.
+            }
+          </small>
         }
-      </small>
+      </div>
+
+      <button type="submit" class="button-primary">Create user</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Users</h2>
+
+    @if (loading()) {
+      <p class="empty-state">Loading...</p>
+    } @else if (users().length === 0) {
+      <p class="empty-state">No users found</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users(); track user.id) {
+              <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td class="date">{{ user.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     }
-  </div>
-
-  <button type="submit">Create user</button>
-</form>
-
-@if (loading()) {
-  <p>Loading...</p>
-} @else if (users().length === 0) {
-  <p>No users found</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Created</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (user of users(); track user.id) {
-        <tr>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-}
+  </section>
+</div>
