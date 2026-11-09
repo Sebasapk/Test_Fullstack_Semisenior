@@ -35,11 +35,15 @@
         <tbody>
           @for (task of tasks(); track task.id) {
             <tr>
-              <td class="title">{{ task.title }}</td>
               <td>
-                <div class="description">{{ task.description || '-' }}</div>
+                <div class="title scrollable-text">{{ task.title }}</div>
               </td>
-              <td>{{ task.userName }}</td>
+              <td>
+                <div class="description scrollable-text">{{ task.description || '-' }}</div>
+              </td>
+              <td>
+                <div class="user-name scrollable-text">{{ task.userName }}</div>
+              </td>
               <td>
                 <span [class]="'badge status-' + task.status.toLowerCase()">{{ task.status }}</span>
               </td>

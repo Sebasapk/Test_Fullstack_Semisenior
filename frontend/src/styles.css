@@ -165,6 +165,12 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
+.scrollable-text {
+  max-height: 6rem;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
 .date {
   color: var(--color-text-muted);
   white-space: nowrap;

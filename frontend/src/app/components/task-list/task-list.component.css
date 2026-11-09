@@ -18,15 +18,19 @@
 }
 
 .title {
+  min-width: 6rem;
+  max-width: 10rem;
   font-weight: 500;
 }
 
 .description {
   width: 18rem;
-  max-height: 6rem;
-  overflow: auto;
   color: var(--color-text-muted);
-  overflow-wrap: anywhere;
+}
+
+.user-name {
+  min-width: 5rem;
+  max-width: 9rem;
 }
 
 .tags {

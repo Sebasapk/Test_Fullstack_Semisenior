@@ -59,8 +59,12 @@
           <tbody>
             @for (user of users(); track user.id) {
               <tr>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
+                <td>
+                  <div class="scrollable-text">{{ user.name }}</div>
+                </td>
+                <td>
+                  <div class="scrollable-text">{{ user.email }}</div>
+                </td>
                 <td class="date">{{ user.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
               </tr>
             }
